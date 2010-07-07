@@ -1,6 +1,6 @@
 
 consumer: script/server -p 3000
-privider: script/server -p 3001
+provider: script/server -p 3001
 
 Service Provider input
   Application URL : http://localhost:3000
@@ -37,11 +37,11 @@ undefined local variable or method `current_user' for #<OauthClientsController:0
 →/oauth/authoized
 
 /oauth_client でコンシューマを登録
-oauth_client_controller の current_userメソッドを変更
+oauth_client_controller の current_userメソッドを変更(accountで作成したユーザー名とパスワードを入力(手抜き))
   def current_user
     #    User:new
-    User.authenticate('igaiga', 'hoge')
-  end
+    @current_user ||= User.authenticate('foo', 'bar')
+　 end
 
 Service Provider input
   Application URL : http://localhost:3000
@@ -54,4 +54,40 @@ Service Provider input
 制御したいメソッドの前にbefore_filterを指定する
 before_filter :oauth_required, :only => [:at_access]
 
-#http://localhost:3001/oauth/at_access?access_token=fFH5yu5YMl0jqQrpPzFW&access_secret=7Neup3OU4f2wm5HWqTo2IIxsrZgMdAPFJw9IhuUh
+■Consumer と Provider でお話する方法
+Provider を -p 3001, Consumer を -p 3000 で起動した場合
+
+* consumer: script/server -p 3000
+* provider: script/server -p 3001
+
+!! Provider で consumer key/secret を発行する
+* http://localhost:3001/account/ でてきとうにサインアップする
+* /oauth_clients でクライアントを登録する
+**  Application URL : http://localhost:3000
+**  Callback URL : http://localhost:3000/my_sample/callback
+*** →provider の client_applications テーブルにconsumer key/secret が登録される
+*** consumer key/secret をコピーしておく
+
+!! Consumer で access token を得る
+* http://localhost:3000/ でてきとうにサインアップする
+* new_consumer を作成する
+** service provider : my_sample
+** consumer key/secret 上記でコピーしたもの
+** scope は空でOK
+* access token を得る
+** my sample - establish
+** authorize access にチェックを入れ save changes
+* access token/secret が表示されるのでコピーしておく
+
+!! Consumer で access token を使ってアクセスする
+sample_consumer.rb に consumer key/secret, access token/token secret を設定
+実行
+ #<Net::HTTPOK 200 OK readbody=true>
+ <h1>You have successed to accesss with access token!</h1>
+と出ればOK
+
+
+■Rails3で使う方法
+Gemfile に
+gem 'oauth'
+gem 'oauth-plugin', :git => 'git://github.com/pelle/oauth-plugin.git', :branch => 'rails3'

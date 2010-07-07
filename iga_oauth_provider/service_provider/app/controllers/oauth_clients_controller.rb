@@ -46,11 +46,6 @@ class OauthClientsController < ApplicationController
     true
   end
 
-#   def current_user
-#     #    User:new
-#      @current_user ||= User.authenticate('igaiga', 'hoge')
-#   end
-
   private
   def get_client_application
     unless @client_application = current_user.client_applications.find(params[:id])

@@ -5,9 +5,8 @@ class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
-   def current_user
-     #    User:new
-      @current_user ||= User.authenticate('igaiga', 'hoge')
+   def current_user     
+     @current_user ||= User.authenticate('foo', 'hoge')
    end
 
   # Scrub sensitive parameters from your log
