@@ -24,9 +24,9 @@ module OAuth
       
       # use in a before_filter
       def oauth_required
-        p 'at oauth_required'
-
+        debugger
         if oauthenticate
+          
           if authorized?
             return true
           else

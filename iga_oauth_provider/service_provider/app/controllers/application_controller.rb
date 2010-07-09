@@ -3,7 +3,8 @@
 
 class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
-  protect_from_forgery # See ActionController::RequestForgeryProtection for details
+#  protect_from_forgery # See ActionController::RequestForgeryProtection for details
+  before_filter :oauth_required, :only => [:at_access]
 
    def current_user     
      @current_user ||= User.authenticate('foo', 'hoge')
