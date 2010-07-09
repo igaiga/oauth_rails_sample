@@ -1,3 +1,6 @@
+*概要*
+Railsの oauth-plugin を使って OAuth service providerを自作します。
+
 *構成*
 *iga_oauth_provider 下記の手順で作成した OAuth service provider
 *oauth_consumer 参考サイトからDLしてきた OAuth consumer
